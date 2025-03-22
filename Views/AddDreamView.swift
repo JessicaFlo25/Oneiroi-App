@@ -10,7 +10,9 @@ import SwiftUI
 struct AddDreamView: View {
     @Environment(\.modelContext) private var modelContext
     @StateObject private var addDreamViewModel = AddDreamViewModel()
-    
+    @State private var titleErrorMessage: String = ""
+    @State private var dreamDescriptionErrorMessage: String = ""
+
     var body: some View {
         GeometryReader { geometry in
             ZStack {
@@ -26,12 +28,12 @@ struct AddDreamView: View {
                     .ignoresSafeArea()
                 
                 VStack(spacing: 0) {
-                    // Title Section
+                    // Title
                     HStack {
                         TextField("Dream Title...", text: $addDreamViewModel.title, axis: .vertical)
                             .disableAutocorrection(true)
                             .font(.custom("AnticDidone-Regular",
-                                      size: geometry.size.width > 600 ? 28 : 30))
+                                          size: geometry.size.width > 600 ? 28 : 30))
                             .textFieldStyle(.plain)
                             .fontWeight(.bold)
                             .lineLimit(2)
@@ -39,7 +41,9 @@ struct AddDreamView: View {
                             .padding(.leading)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 8)
-                                    .stroke(Color.gray.opacity(0.5), lineWidth: 3)
+                                    .stroke(addDreamViewModel.titleErrorMessage.isEmpty ? Color.gray.opacity(0.5) : Color.red,
+                                            lineWidth: 3
+                                           )
                                     .frame(height: 70)
                             )
                             .padding(.horizontal)
@@ -51,8 +55,7 @@ struct AddDreamView: View {
                         .background(Color.black)
                         .frame(width: geometry.size.width)
                         .padding(.bottom, 20)
-                    
-                    // Description Section with Auto-Scrolling
+                    //dream description
                     ScrollViewReader { scrollProxy in
                         ScrollView {
                             TextField("Dream description...",
@@ -80,17 +83,50 @@ struct AddDreamView: View {
                         }
                         .overlay(
                             RoundedRectangle(cornerRadius: 8)
-                                .stroke(Color.gray.opacity(0.5), lineWidth: 3)
-                                .frame(height: 350)
+                                .stroke(addDreamViewModel.dreamDescriptionErrorMessage.isEmpty ? Color.gray.opacity(0.5) : Color.red , lineWidth: 3)
+                                .frame(height: 300)
                         )
                         .padding(.horizontal)
-                        .frame(height: 350)
+                        .frame(height: 300)
                     }
-                    .padding(.bottom, 10)
+                    .padding(.bottom, 30)
+                    
+                    //display error messages
+                    //both are invalid
+                    if !titleErrorMessage.isEmpty && !dreamDescriptionErrorMessage.isEmpty{
+                        Text(titleErrorMessage)
+                        Text(dreamDescriptionErrorMessage)
+                    }
+                    else if !titleErrorMessage.isEmpty {
+                        Text(titleErrorMessage)
+                    }
+                    else {
+                        Text(dreamDescriptionErrorMessage)
+                    }
                     
                     Button(action: {
-                        print("Submitting dream...")
-                        // Add your save logic here
+                        //both valid
+                        if addDreamViewModel.validateTitle() && addDreamViewModel.validateDescription() {
+                            //call gemini
+                            print("yay they all provided")
+                        }
+                        else {
+                            //both invalid
+                            if !addDreamViewModel.validateTitle() && !addDreamViewModel.validateDescription(){
+                                //error message for title
+                                dreamDescriptionErrorMessage = addDreamViewModel.dreamDescriptionErrorMessage
+                                //error message for description
+                                titleErrorMessage = addDreamViewModel.titleErrorMessage
+                            }
+                            //title invalid
+                            if !addDreamViewModel.validateTitle() {
+                                titleErrorMessage = addDreamViewModel.titleErrorMessage
+                            }
+                            //description was invalid
+                            else{
+                                dreamDescriptionErrorMessage = addDreamViewModel.dreamDescriptionErrorMessage
+                            }
+                        }
                     }) {
                         Text("Submit")
                             .padding()
