@@ -95,13 +95,12 @@ struct AddDreamView: View {
                     //display error messages
                     //both are invalid
                     if !titleErrorMessage.isEmpty && !dreamDescriptionErrorMessage.isEmpty{
-                        Text(titleErrorMessage)
-                        Text(dreamDescriptionErrorMessage)
+                        Text(titleErrorMessage + "\n" + dreamDescriptionErrorMessage)
                     }
                     else if !titleErrorMessage.isEmpty {
                         Text(titleErrorMessage)
                     }
-                    else {
+                    else if !dreamDescriptionErrorMessage.isEmpty {
                         Text(dreamDescriptionErrorMessage)
                     }
                     
@@ -124,12 +123,15 @@ struct AddDreamView: View {
                                 titleErrorMessage = addDreamViewModel.titleErrorMessage
                             }
                             //title invalid
-                            if !addDreamViewModel.validateTitle() {
+                            if !addDreamViewModel.validateTitle() && addDreamViewModel.validateDescription() {
                                 titleErrorMessage = addDreamViewModel.titleErrorMessage
+                                //description provided
+                                dreamDescriptionErrorMessage = ""
                             }
                             //description was invalid
-                            else{
+                            else if !addDreamViewModel.validateDescription() && addDreamViewModel.validateTitle(){
                                 dreamDescriptionErrorMessage = addDreamViewModel.dreamDescriptionErrorMessage
+                                titleErrorMessage = ""
                             }
                         }
                     }) {

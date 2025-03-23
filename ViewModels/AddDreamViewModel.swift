@@ -13,8 +13,8 @@ class AddDreamViewModel: ObservableObject {
     @Published var title: String = ""
     @Published var dreamDescription: String = ""
     @Published var date: Date = Date()
-    @Published var titleIsValid: Bool = false
-    @Published var dreamDescriptionIsValid: Bool = false
+//    @Published var titleIsValid: Bool = false
+//    @Published var dreamDescriptionIsValid: Bool = false
     
     @Published var titleErrorMessage: String = ""
     @Published var dreamDescriptionErrorMessage: String = ""
@@ -27,7 +27,7 @@ class AddDreamViewModel: ObservableObject {
             return false
         }
         //valid
-        titleIsValid = true
+//        titleIsValid = true
         titleErrorMessage = ""
         return true
     }
@@ -38,7 +38,7 @@ class AddDreamViewModel: ObservableObject {
             dreamDescriptionErrorMessage = "Description is required"
             return false
         }
-        dreamDescriptionIsValid = true
+//        dreamDescriptionIsValid = true
         dreamDescriptionErrorMessage = ""
         return true
     }
