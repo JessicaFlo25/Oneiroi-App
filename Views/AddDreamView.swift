@@ -10,6 +10,7 @@ import SwiftUI
 struct AddDreamView: View {
     @Environment(\.modelContext) private var modelContext
     @StateObject private var addDreamViewModel = AddDreamViewModel()
+    //hold error messgages from viewmodel and will be reset/checked in this view 
     @State private var titleErrorMessage: String = ""
     @State private var dreamDescriptionErrorMessage: String = ""
 
@@ -107,6 +108,10 @@ struct AddDreamView: View {
                     Button(action: {
                         //both valid
                         if addDreamViewModel.validateTitle() && addDreamViewModel.validateDescription() {
+                            //have to reset the message states because can be scenario where none or one isnt provided
+                            //then at the next attempt, need to reset the message states to remove previous error messages
+                            titleErrorMessage = ""
+                            dreamDescriptionErrorMessage = ""
                             //call gemini
                             print("yay they all provided")
                         }
