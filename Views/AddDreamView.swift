@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct AddDreamView: View {
     @Environment(\.modelContext) private var modelContext
@@ -13,6 +14,7 @@ struct AddDreamView: View {
     //hold error messgages from viewmodel and will be reset/checked in this view 
     @State private var titleErrorMessage: String = ""
     @State private var dreamDescriptionErrorMessage: String = ""
+
 
     var body: some View {
         GeometryReader { geometry in
@@ -97,9 +99,11 @@ struct AddDreamView: View {
                     if !titleErrorMessage.isEmpty && !dreamDescriptionErrorMessage.isEmpty{
                         Text(titleErrorMessage + "\n" + dreamDescriptionErrorMessage)
                     }
+                    //title invalid so display saved error
                     else if !titleErrorMessage.isEmpty {
                         Text(titleErrorMessage)
                     }
+                    //description is invalid display saved error message
                     else if !dreamDescriptionErrorMessage.isEmpty {
                         Text(dreamDescriptionErrorMessage)
                     }
@@ -107,11 +111,39 @@ struct AddDreamView: View {
                     Button(action: {
                         //both valid
                         if addDreamViewModel.validateTitle() && addDreamViewModel.validateDescription() {
+                            //all inputs were valid; change bool to true
+                            addDreamViewModel.allValid.toggle()
+                            //cretae instance of dream with saved provided values
+                            let newDream = Dream(
+                                description: addDreamViewModel.dreamDescription,
+                                title: addDreamViewModel.title,
+                                date: Date()
+                            )
+                            //perform insertion of the input
+                            modelContext.insert(newDream)
+                            //switfch boolean to true for navigation
+                            addDreamViewModel.navigateToDreamAnalysis = true
+                            //xplicitly save the context
+                            do {
+                                try modelContext.save()
+                                print("Dream saved successfully!")
+                            } catch {
+                                print("Failed to save dream: \(error)")
+                            }
+                            
+                            //toggle boolean so that the popup can be presented
+                            addDreamViewModel.showPopUp.toggle()
+                            //print out all dreams inserted
+                            addDreamViewModel.printSavedDreams(modelContext: modelContext)
+
                             //have to reset the message states because can be scenario where none or one isnt provided
                             //then at the next attempt, need to reset the message states to remove previous error messages
+                            addDreamViewModel.title = ""
+                            addDreamViewModel.dreamDescription = ""
                             titleErrorMessage = ""
                             dreamDescriptionErrorMessage = ""
-                            //call gemini
+                            //call gemini, using model logic
+                            print(Date())
                             print("yay they all provided")
                         }
                         else {
@@ -122,20 +154,20 @@ struct AddDreamView: View {
                                 //error message for description
                                 titleErrorMessage = addDreamViewModel.titleErrorMessage
                             }
-                            //title invalid
+                            //speciic scenario where title invalid and dream description isn't
                             if !addDreamViewModel.validateTitle() && addDreamViewModel.validateDescription() {
                                 titleErrorMessage = addDreamViewModel.titleErrorMessage
-                                //description provided
+                                //description provided so reset the state to prevent showing previous state
                                 dreamDescriptionErrorMessage = ""
                             }
-                            //description was invalid
+                            //description was invalid but title was not so reset the state
                             else if !addDreamViewModel.validateDescription() && addDreamViewModel.validateTitle(){
                                 dreamDescriptionErrorMessage = addDreamViewModel.dreamDescriptionErrorMessage
                                 titleErrorMessage = ""
                             }
                         }
                     }) {
-                        Text("Submit")
+                        Text("Get Analysis!")
                             .padding()
                             .background(Color.blue)
                             .foregroundColor(.white)
@@ -143,12 +175,27 @@ struct AddDreamView: View {
                     }
                     Spacer()
                 }
+                .navigationDestination(
+                    isPresented: $addDreamViewModel.navigateToDreamAnalysis
+                ) {
+                    DreamAnalysisView(dreamDescription: $addDreamViewModel.dreamDescription )
+                }
                 .frame(width: geometry.size.width, alignment: .top)
+                //another check to ensuure context is correct
+//                .onAppear {
+//                    print("Context ID:", ObjectIdentifier(modelContext))
+//                }
             }
         }
     }
 }
+//in simulator keyboard may block submit button but there is a simple fix
 
+//alter the preview since data may not persist in builds
 #Preview {
-    AddDreamView()
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: Dream.self, configurations: config)
+    
+    return AddDreamView()
+        .modelContainer(container)
 }

@@ -3,7 +3,6 @@
 //  Oneiroi
 //
 //  Created by Jessica Flores Olmos on 3/16/25.
-//Source : https://www.youtube.com/watch?v=6Ibvt5W5FbA
 
 
 import Foundation
@@ -13,7 +12,7 @@ enum APIKey {
     static var `default`: String {
         guard let filePath = Bundle.main.path(forResource: "GeminiAPI-Info", ofType: "plist")
         else {
-            fatalError("Couldn't find file 'GenerativeAI-Info.plist'.")
+            fatalError("Couldn't find file 'GeminiAPI-Info.plist'.")
         }
         //read what is in then file
         let plist = NSDictionary(contentsOfFile: filePath)

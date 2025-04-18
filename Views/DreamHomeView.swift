@@ -5,8 +5,10 @@
 //  Created by Jessica Flores Olmos on 3/16/25.
 //
 import SwiftUI
+import SwiftData
 
 struct DreamHomeView: View {
+    @Environment(\.modelContext) private var modelContext
     var body: some View {
         NavigationStack {
             GeometryReader { geometry in
@@ -34,8 +36,10 @@ struct DreamHomeView: View {
                                 .padding(.leading)
                             
                             Spacer()
-                            
-                            NavigationLink(destination: AddDreamView()) {
+                            //consequences of not passing model context results in data not persitsing and seemingly disapperaing as if two'different' instances of app were open
+                            //ensures submit will always add and show as 'added'
+                            NavigationLink(destination: AddDreamView().modelContext(modelContext)
+                            ) {
                                 Image(systemName: "square.and.pencil")
                                     .font(.system(size: 28, weight: .heavy))
                                     .scaledToFit()
@@ -45,6 +49,10 @@ struct DreamHomeView: View {
                             }
                         }
                         .frame(height: 90)
+                        //check that ID's are the same in console
+//                        .onAppear {
+//                            print("Context ID from home:", ObjectIdentifier(modelContext))
+//                        }
                         
                         Divider()
                             .background(Color.gray)
@@ -62,5 +70,9 @@ struct DreamHomeView: View {
 
 
 #Preview {
-    DreamHomeView()
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: Dream.self, configurations: config)
+    return DreamHomeView()
+        .modelContainer(container)
 }
+
