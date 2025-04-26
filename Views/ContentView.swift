@@ -7,22 +7,34 @@
 
 import SwiftUI
 import GoogleGenerativeAI
+import SwiftData
 
 struct ContentView: View {
-    let model = GenerativeModel(name: "gemini-1.5-flash-latest", apiKey: APIKey.default)
-    @ObservedObject var spotifyController : SpotifyController
+    @ObservedObject var playlistController = DreamPlaylistController()
+    @Environment(\.modelContext) private var modelContext
+
+    
     var body: some View {
-        VStack {
-            WelcomeView(spotifyController: spotifyController)
-                .onOpenURL { url in
-                    spotifyController.setAccessToken(from: url)
+        //in order to set the accesstoken need to attach it to a view since can not attach to conditionals because of type never
+        Group {
+            if playlistController.wasAuthenticated {
+                NavigationStack {
+                    DreamHomeView()
                 }
+            } else {
+                WelcomeView(playlistController: playlistController)
+            }
         }
-        .padding()
-        
+        .onOpenURL { url in
+            playlistController.updateAccessToken(url)
+        }
     }
 }
 
 #Preview {
-    ContentView(spotifyController: SpotifyController())
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: Dream.self, configurations: config)
+    
+    return ContentView(playlistController: DreamPlaylistController())
+        .modelContainer(container)
 }

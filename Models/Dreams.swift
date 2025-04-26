@@ -10,7 +10,7 @@ import SwiftData
 
 @Model
 final class Dream {
-    @Attribute(.unique) var id: UUID
+    @Attribute(.unique) var id: UUID//ensures no repeats
     var dreamDescription: String
     var title: String
     var date: Date

@@ -9,8 +9,8 @@ import SwiftData
 
 struct DreamHomeView: View {
     @Environment(\.modelContext) private var modelContext
+    @Query private var dreams: [Dream]
     var body: some View {
-        NavigationStack {
             GeometryReader { geometry in
                 ZStack {
                     //sets the background as dinosaur image, first bottom layer
@@ -58,12 +58,39 @@ struct DreamHomeView: View {
                             .background(Color.gray)
                             .frame(width: geometry.size.width)
                         //after this line can add 'folders' for the dreams
+                        
+                        // Display dreams as "folders"
+                        ScrollView {
+                            LazyVGrid(columns: [GridItem(.adaptive(minimum: 150))], spacing: 20) {
+                                ForEach(dreams) { dream in
+                                    NavigationLink {
+                                        DreamDetailView(dream: dream)
+                                    } label: {
+                                        VStack {
+                                            Image(systemName: "folder.fill")
+                                                .font(.system(size: 50))
+                                                .foregroundColor(.blue)
+                                            Text(dream.title)
+                                                .font(.headline)
+                                                .lineLimit(1)
+                                            Text(dream.date, style: .date)
+                                                .font(.caption)
+                                        }
+                                        .padding()
+                                        .background(Color.white.opacity(0.8))
+                                        .cornerRadius(10)
+                                        .shadow(radius: 5)
+                                    }
+                                }
+                            }
+                            .padding()
+                        }
+                        //end
                         Spacer()
                     }
                     .frame(width: geometry.size.width, alignment: .top)
                 }
             }
-        }
     }
 }
 
@@ -75,4 +102,3 @@ struct DreamHomeView: View {
     return DreamHomeView()
         .modelContainer(container)
 }
-

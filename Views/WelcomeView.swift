@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct WelcomeView: View {
-    @ObservedObject var spotifyController: SpotifyController
+    @ObservedObject var playlistController =  DreamPlaylistController()
     //button to take to dreamhomebiew
     @State private var isPressed = false
     
@@ -60,6 +60,7 @@ struct WelcomeView: View {
                     
                     Button(action:  {
                         isPressed.toggle()
+                        playlistController.authorizeandOpenApp()
                     }) {
                         Text("Get Started")
                             .padding()
@@ -68,15 +69,11 @@ struct WelcomeView: View {
                             .cornerRadius(10)
                     }
                     
-                    if isPressed {
-                        DreamHomeView()
-                    }
-                    
                 }
             }
         }
 }
 
 #Preview {
-    WelcomeView(spotifyController: SpotifyController())
+    WelcomeView()
 }

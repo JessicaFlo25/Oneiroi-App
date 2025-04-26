@@ -10,10 +10,10 @@ import SwiftData
 
 @main
 struct OneiroiApp: App {
-    @StateObject var spotifyController = SpotifyController()
+    @StateObject var playlistController = DreamPlaylistController()
     var body: some Scene {
         WindowGroup {
-            ContentView(spotifyController: spotifyController)
+            ContentView(playlistController: playlistController)
         }
         //ensures that all views have access to same created model context
         .modelContainer(for: Dream.self)
