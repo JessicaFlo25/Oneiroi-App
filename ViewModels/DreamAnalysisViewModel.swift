@@ -37,20 +37,36 @@ class DreamAnalysisViewModel: ObservableObject {
         isLoading = true
         //remove the loading screen until after the response is recieved
         defer { isLoading = false }
+        // Print initial dream details
+        print("🔵 Starting analysis for dream:")
+        print("Title: \(dream.title)")
+        print("Description: \(dream.dreamDescription)")
+        print("Current tags (before analysis): \(dream.tags)")
+        
         
         do {
             let response = try await model.generateContent("""
                 Analyze: \(dream.dreamDescription)
                 Respond with: music_genre|emotion|theme
-                """)
+""")
             //go through the response and remove the whitespace and |
             if let text = response.text {
                 let parsedTags = text.components(separatedBy: "|")
-                    .map { $0.trimmingCharacters(in: .whitespaces) }
+                    .map { $0.trimmingCharacters(in: .whitespacesAndNewlines)
+                            .replacingOccurrences(of: "\n", with: "")//without this the last tag was being saved with a whitespace
+                            .replacingOccurrences(of: "\"", with: "")
+                    }
                 tags = parsedTags
                 result = text
                 dream.tags = parsedTags
+                //print before saving
+                print("🔴 Dream tags before save:", dream.tags)
                 try context.save()
+                
+                //print after saving
+                print("🟠 Dream tags after save:", dream.tags)
+                print("🟤 Context saved successfully")
+                
             }
         } catch {
             result = "Error: \(error.localizedDescription)"

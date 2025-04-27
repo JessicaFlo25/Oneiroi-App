@@ -12,37 +12,44 @@ struct DreamDetailView: View {
     
     var body: some View {
         GeometryReader { geometry in
-            ScrollView {
-                VStack(alignment: .leading, spacing: 20) {
-                    Text(dream.title)
-                        .font(.custom("AnticDidone-Regular",
-                                      size: geometry.size.width > 600 ? 40 : 35))
-                        .fontWeight(.bold)
-                    if dream.tags.count == 3 {
-                        //call resusuable view for tags
-                        DreamTagView(dreamTags: $dream.tags)
-                            .padding(.vertical, 5)
-                    }
-                    
-                    Text(dream.date, style: .date)
-                        .font(.subheadline)
-                        .foregroundColor(.gray)
-                    
-                    Divider()
-                    
+            VStack(alignment: .leading, spacing: 20) {
+                // Header section (title, tags, date)
+                Text(dream.title)
+                    .font(.custom("AnticDidone-Regular",
+                                size: geometry.size.width > 600 ? 40 : 35))
+                    .fontWeight(.bold)
+                
+                if dream.tags.count == 3 {
+                    DreamTagView(dreamTags: $dream.tags)
+                        .padding(.vertical, 5)
+                }
+                
+                Text(dream.date, style: .date)
+                    .font(.subheadline)
+                    .foregroundColor(.gray)
+                
+                Divider()
+                
+                // Scrollable description with background
+                ScrollView {
                     Text(dream.dreamDescription)
                         .font(.custom("AnticDidone-Regular",
-                                      size: geometry.size.width > 600 ? 40 : 25))
+                                    size: geometry.size.width > 600 ? 40 : 25))
                         .font(.body)
                         .padding()
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        .background(Color.gray.opacity(0.1))
-                        .cornerRadius(10)
-                    
-                    Spacer()
                 }
-                .padding()
+                .background(Color.gray.opacity(0.1))
+                .cornerRadius(10)
+                .frame(height: geometry.size.height * 0.4)
+                
+                Spacer()
+                //this section contains a buttonview which will call spotify if the user wants
+                //on click will call respective methods to make playlist,search songs,and add songs
+            
+                
             }
+            .padding()
             .navigationTitle("Dream Details")
             .navigationBarTitleDisplayMode(.inline)
         }

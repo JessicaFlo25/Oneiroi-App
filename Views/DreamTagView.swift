@@ -20,6 +20,7 @@ struct DreamTagView: View {
                         Text(dreamTags[index])
                             .font(.custom("AnticDidone-Regular", size: 15))
                             .font(.subheadline)
+                            .lineLimit(1)
                             .padding(.horizontal, 12)
                             .padding(.vertical, 6)
                             .background(colors[index].opacity(0.2))
@@ -27,7 +28,6 @@ struct DreamTagView: View {
                             .cornerRadius(15)
                     }
                 }
-                .frame(maxWidth: .infinity)
             }
         }
     }
