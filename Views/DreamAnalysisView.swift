@@ -7,8 +7,10 @@
 
 import SwiftUI
 import GoogleGenerativeAI
+import SwiftData
 
-//specify the prompt to give to Gemini, global
+//specify the prompt to give to Gemini, global, attach the actual dream received in
+//viewmodel method
 let dreamAnalysisSystemInstruction = ModelContent(
     role: "model",
     parts: """
@@ -17,36 +19,45 @@ let dreamAnalysisSystemInstruction = ModelContent(
 )
 
 struct DreamAnalysisView: View {
-    @Binding var dreamDescription: String
+    @Bindable var dream: Dream
     @StateObject private var geminiResponseManager = DreamAnalysisViewModel()
-
+    @Environment(\.modelContext) private var modelContext
+    
     var body: some View {
-        VStack(spacing: 20) {
-            Text("Your dream can be categorized to the following three tags:")
-                .font(.headline)
-
-            if geminiResponseManager.isLoading {
-                ProgressView()
-                    .progressViewStyle(CircularProgressViewStyle(tint: .indigo))
-                    .scaleEffect(2)
-            } else {
-                Text(geminiResponseManager.result)
-                    .font(.title2)
-                    .multilineTextAlignment(.center)
-                    .padding()
+            VStack(spacing: 20) {
+                Text("Your dream can be categorized to the following three tags:")
+                    .font(.custom("AnticDidone-Regular", size: 25))
+                    .font(.headline)
+                
+                if geminiResponseManager.isLoading {
+                    ProgressView()
+                        .progressViewStyle(CircularProgressViewStyle(tint: .indigo))
+                        .scaleEffect(2)
+                } else {
+                    //call resuable view, no need for result from viewmodel
+                    DreamTagView(dreamTags: $dream.tags)
+                }
             }
-        }
-        .padding()
-        .task {
-            await geminiResponseManager.getResponse(for: dreamDescription)
-        }
+            .padding()
+            .task {
+                await geminiResponseManager.getResponse(for: dream, context: modelContext)
+            }
+            VStack {
+                Image("rabbitandcarrot")
+                    .resizable()
+                    .frame(width: 400, height:500)
+                    .padding(.bottom, 20)
+            }
     }
 }
 
 #Preview {
-    DreamAnalysisView(dreamDescription: .constant("I was flying through a purple sky, being chased by shadows."))
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: Dream.self, configurations: config)
+    let dream = Dream(description: "Test dream", title: "Test")
+    let context = ModelContext(container)  // Create the context
+    
+    return DreamAnalysisView(dream: dream)
+        .modelContainer(container)
+        .environment(\.modelContext, context)  // Inject the context
 }
-
-
-//require systemInstruction
-//can also enable safety setting: safetySettings

@@ -119,6 +119,7 @@ struct AddDreamView: View {
                                 title: addDreamViewModel.title,
                                 date: Date()
                             )
+                            addDreamViewModel.currentDream = newDream
                             //perform insertion of the input
                             modelContext.insert(newDream)
                             //switfch boolean to true for navigation
@@ -131,8 +132,7 @@ struct AddDreamView: View {
                                 print("Failed to save dream: \(error)")
                             }
                             
-                            //toggle boolean so that the popup can be presented
-                            addDreamViewModel.showPopUp.toggle()
+
                             //print out all dreams inserted
                             addDreamViewModel.printSavedDreams(modelContext: modelContext)
 
@@ -178,8 +178,10 @@ struct AddDreamView: View {
                 .navigationDestination(
                     isPresented: $addDreamViewModel.navigateToDreamAnalysis
                 ) {
-                    DreamAnalysisView(dreamDescription: $addDreamViewModel.dreamDescription )
-                }
+                    if let dream = addDreamViewModel.currentDream {
+                        DreamAnalysisView(dream: dream)
+                            .modelContext(modelContext)
+                    }                }
                 .frame(width: geometry.size.width, alignment: .top)
                 //another check to ensuure context is correct
 //                .onAppear {

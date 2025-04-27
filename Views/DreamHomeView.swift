@@ -59,7 +59,7 @@ struct DreamHomeView: View {
                             .frame(width: geometry.size.width)
                         //after this line can add 'folders' for the dreams
                         
-                        // Display dreams as "folders"
+                        //dreams are contained
                         ScrollView {
                             LazyVGrid(columns: [GridItem(.adaptive(minimum: 150))], spacing: 20) {
                                 ForEach(dreams) { dream in

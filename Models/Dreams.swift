@@ -14,11 +14,13 @@ final class Dream {
     var dreamDescription: String
     var title: String
     var date: Date
+    var tags: [String] //will hold the tags frm gemini after dream is inserted and saved
     //initializer
-    init(description: String, title: String, date: Date = Date()) {
+    init(description: String, title: String, date: Date = Date(), tags: [String] = []) {
         self.id = UUID()
         self.dreamDescription = description
         self.title = title
         self.date = date
+        self.tags = tags
     }
 }

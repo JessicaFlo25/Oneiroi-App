@@ -7,11 +7,16 @@
 
 import Foundation
 import GoogleGenerativeAI
+import SwiftData
 
+
+//although defined model content in the view as a global; still need to 'attach' the actual dream to the instructions
 //holdS logic with transformations of view including call to gemini
+@MainActor
 class DreamAnalysisViewModel: ObservableObject {
     @Published var isLoading: Bool = false
-    @Published var result: String = ""
+    @Published var result: String = "" //not used to display recieved response in the view but rather debugging
+    @Published var tags: [String] = [] //gemini response
     
     //model with specific settings
     private let model = GenerativeModel(
@@ -26,42 +31,29 @@ class DreamAnalysisViewModel: ObservableObject {
         systemInstruction: dreamAnalysisSystemInstruction
     )
     
-    //function that performs the api call
-    //perform api call asynchornously
-    func getResponse(for dream: String) async {
-        //because awaiting response toggle boolean to show progressview
-        isLoading.toggle()
+    //function that performs the api call asynchornously
+    //method adkusted to accept passed down dream to get tags and save them to the 'current dream'
+    func getResponse(for dream: Dream, context: ModelContext) async {
+        isLoading = true
+        //remove the loading screen until after the response is recieved
         defer { isLoading = false }
-        //no need to set result to empty string since is already empty
         
         do {
-            //although defined model content in the view as a global; still need to 'attach' the actual dream to the instructions
-            let fullPrompt = """
-            Analyze this dream according to the given instructions:
-            
-            Dream: \(dream)
-            
-            Respond EXACTLY with 3 pipe-separated values:
-            music_genre|emotion|theme
-            """
-            //send full prompt with dream to Gemini
-            let response = try await model.generateContent(fullPrompt)
-            //remove loading preview
-            isLoading = false
-            result = response.text ?? "No response found"
+            let response = try await model.generateContent("""
+                Analyze: \(dream.dreamDescription)
+                Respond with: music_genre|emotion|theme
+                """)
+            //go through the response and remove the whitespace and |
+            if let text = response.text {
+                let parsedTags = text.components(separatedBy: "|")
+                    .map { $0.trimmingCharacters(in: .whitespaces) }
+                tags = parsedTags
+                result = text
+                dream.tags = parsedTags
+                try context.save()
+            }
         } catch {
-            result = "Failed to analyze dream: \(error.localizedDescription)"
-            let errorDetails = """
-                    Error: \(String(describing: error))
-                    Localized: \(error.localizedDescription)
-                    """
-            
-            //print full error details to console
-            print("API Error Details:\n\(errorDetails)")
-                    
+            result = "Error: \(error.localizedDescription)"
         }
-        
-        
     }
-
 }

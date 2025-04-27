@@ -18,10 +18,9 @@ class AddDreamViewModel: ObservableObject {
     @Published var dreamDescriptionErrorMessage: String = ""
     //booleans to determine popup/call to gemini
     @Published var allValid: Bool = false //need before proceeding
-    @Published var showPopUp: Bool = false // popup will only showup after proper inputs and ensures can also remove if user does not want anaylsis
     @Published var navigateToDreamAnalysis : Bool = false  //will determine if call to gemini will be made
-    
-    
+    @Published var dreamDescriptionForAnalysis: String = "" //after passing down full dream to dreamanayliss view need to save the description so it is accesible from dreamanalysis view
+    @Published var currentDream: Dream?
     
     //check title input to provide more detailed UI error messages
     func validateTitle() -> Bool {
