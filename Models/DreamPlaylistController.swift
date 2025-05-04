@@ -28,6 +28,7 @@ class DreamPlaylistController: NSObject, ObservableObject, SPTAppRemoteDelegate 
     //hold access token
     @Published var accessToken: String?
     @Published var wasAuthenticated: Bool = false
+    
     //from spotify documentation
     let spotifyClientID = "02fbf9c2a8b3433cb701048822c6beda"
     let spotifyRedirectURL = URL(string:"spotify-ios-quick-start://spotify-login-callback")!
@@ -46,7 +47,9 @@ class DreamPlaylistController: NSObject, ObservableObject, SPTAppRemoteDelegate 
         //define scopes (aka permisions) to use certain endpoints since not included at authorization; "extra authorizations"
         let scopes: [String] = [
             "playlist-modify-public", //to make playlist & add songs
-            "playlist-modify-private" //to make playlist & add songs
+            "playlist-modify-private",//to make playlist & add songs
+            "user-read-private", //needed to retrieve user information
+            "user-read-email"//needed to retrieve user information
         ]
         
         appRemote.authorizeAndPlayURI("", asRadio: false, additionalScopes: scopes)

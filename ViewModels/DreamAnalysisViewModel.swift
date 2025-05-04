@@ -46,16 +46,23 @@ class DreamAnalysisViewModel: ObservableObject {
         
         do {
             let response = try await model.generateContent("""
-                Analyze: \(dream.dreamDescription)
-                Respond with: music_genre|emotion|theme
-""")
-            //go through the response and remove the whitespace and |
+            Analyze this dream: \(dream.dreamDescription)
+            Respond EXACTLY in this format ONLY: music_genre|emotion|theme
+            Rules:
+            1. No markdown (**, _)
+            2. No quotation marks
+            3. No additional text
+            4. Only 3 tags separated by pipes
+            Example: lofi|longing|regret
+        """)
+            //go through the response and remove the whitespace and other special characters
             if let text = response.text {
                 let parsedTags = text.components(separatedBy: "|")
-                    .map { $0.trimmingCharacters(in: .whitespacesAndNewlines)
-                            .replacingOccurrences(of: "\n", with: "")//without this the last tag was being saved with a whitespace
-                            .replacingOccurrences(of: "\"", with: "")
+                    .map {
+                        $0.trimmingCharacters(in: .whitespacesAndNewlines)
+                          .replacingOccurrences(of: "[*\"“”]", with: "", options: .regularExpression)
                     }
+                    .filter { !$0.isEmpty }
                 tags = parsedTags
                 result = text
                 dream.tags = parsedTags

@@ -15,12 +15,15 @@ final class Dream {
     var title: String
     var date: Date
     var tags: [String] //will hold the tags frm gemini after dream is inserted and saved
+    var playlistID: String? //this will hold the id of the created playlist to display in a different view
+    var playlistWasCreated: Bool{playlistID != nil }
     //initializer
-    init(description: String, title: String, date: Date = Date(), tags: [String] = []) {
+    init(description: String, title: String, date: Date = Date(), tags: [String] = [], playlistID: String? = nil) {
         self.id = UUID()
         self.dreamDescription = description
         self.title = title
         self.date = date
         self.tags = tags
+        self.playlistID = playlistID
     }
 }

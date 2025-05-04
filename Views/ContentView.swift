@@ -10,7 +10,7 @@ import GoogleGenerativeAI
 import SwiftData
 
 struct ContentView: View {
-    @ObservedObject var playlistController = DreamPlaylistController()
+    @EnvironmentObject var playlistController: DreamPlaylistController
     @Environment(\.modelContext) private var modelContext
 
     
@@ -22,7 +22,7 @@ struct ContentView: View {
                     DreamHomeView()
                 }
             } else {
-                WelcomeView(playlistController: playlistController)
+                WelcomeView()
             }
         }
         .onOpenURL { url in
@@ -35,6 +35,6 @@ struct ContentView: View {
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: Dream.self, configurations: config)
     
-    return ContentView(playlistController: DreamPlaylistController())
+    return ContentView()
         .modelContainer(container)
 }

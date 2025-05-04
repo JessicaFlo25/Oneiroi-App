@@ -13,7 +13,8 @@ struct OneiroiApp: App {
     @StateObject var playlistController = DreamPlaylistController()
     var body: some Scene {
         WindowGroup {
-            ContentView(playlistController: playlistController)
+            ContentView()
+            .environmentObject(playlistController)
         }
         //ensures that all views have access to same created model context
         .modelContainer(for: Dream.self)
