@@ -35,10 +35,8 @@ struct ViewPlayListView: View {
                 //will call seperate view to display thw playlist items
                 //the user will never see the results of the search but rather finalized playlist
                 PlaylistSongsView(dream: dream)
-                    .environmentObject(DreamPlaylistController())
             }
         }
-        .navigationTitle("Your Dream Playlist")
         .task {
             guard let accessToken = playlistController.accessToken else {
                 errorMessage = "No access token available"

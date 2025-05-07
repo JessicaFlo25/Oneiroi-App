@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 
 class ViewPlaylistViewModel:ObservableObject {
     // MARK: -This function searches items

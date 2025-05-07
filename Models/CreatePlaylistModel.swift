@@ -22,16 +22,11 @@ struct createPlaylistResponse:Codable{
     let id:String //id of the playlist so can fetch
     let name: String
 }
+// MARK: - Pertain to retrival of items from playlist
 //struct to retrieve information of the playlist after all songs have been added to the playlist
 struct playlistInformation:Codable{
     let images:[playlistImages] //array of object images defined in seperate struct called playlistImage
     let tracks:completedPlaylistInformation //holds metadata and further specifics of tracks contined
-}
-//useda after creation in conjucntion with struct above(only information reagridinf the images)
- struct playlistImages:Codable{
-    let url:String
-    let height:Int?
-    let width:Int?
 }
 //after creation and finsihed adding all tracks to the playlist
 struct completedPlaylistInformation:Codable{
@@ -39,10 +34,7 @@ struct completedPlaylistInformation:Codable{
     let items:[playlistSongsItem] //items is an array of playlistsongitemswhich is then an object of tracks contianing more minute details of those tracks
 }
 
-//holds the actual information of individual songs in the playlist
-struct playlistSongsItem:Codable{
-    let track:specificTrackInformation
-}
+
 struct specificTrackInformation:Codable{
     let artists: [songArtist]  //array of the songs of the actual song
     let name: String    //name of song
@@ -67,11 +59,39 @@ struct searchedItemsObject:Codable{
     let total:Int
     let items:[tracksObject]    //array of TrackObject
 }
-
+// MARK: - Made seperate exact struct for sake of clarity in naming but could have reused struct above
+struct getPlaylistResponse:Codable{
+    let href:String
+    let limit:Int
+    let next:String?
+    let offset:Int //documentation:The offset of the items returned (as set in the query or by default)
+    let previous: String?
+    let total:Int
+    let items:[playlistSongsItem]  
+}
+//holds the actual information of individual songs in the playlist
+struct playlistSongsItem:Codable{
+    let track:tracksObject
+}
 struct tracksObject:Codable{
+    let album:albumContainer
+    let artists:[artistObject]
     let id:String
     let name:String
     let uri:String
+}
+struct albumContainer:Codable{
+    let images:[playlistImages]
+}
+//useda after creation in conjucntion with struct above(only information reagridinf the images)
+ struct playlistImages:Codable{
+    let url:String
+    let height:Int?
+    let width:Int?
+}
+struct artistObject:Codable{
+    let name:String
+    let id:String
 }
 //MARK: -For debugging, define errors that folow error type
 

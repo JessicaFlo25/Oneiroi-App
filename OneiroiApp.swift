@@ -15,6 +15,7 @@ struct OneiroiApp: App {
         WindowGroup {
             ContentView()
             .environmentObject(playlistController)
+            .preferredColorScheme(.light)  //ensure app is in light mode becuase of png drawings
         }
         //ensures that all views have access to same created model context
         .modelContainer(for: Dream.self)

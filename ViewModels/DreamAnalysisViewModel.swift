@@ -52,7 +52,8 @@ class DreamAnalysisViewModel: ObservableObject {
             1. No markdown (**, _)
             2. No quotation marks
             3. No additional text
-            4. Only 3 tags separated by pipes
+            4.Use spaces between words (e.g. "indie pop", not "indie_pop")
+            5. Only 3 tags separated by pipes
             Example: lofi|longing|regret
         """)
             //go through the response and remove the whitespace and other special characters
@@ -61,6 +62,7 @@ class DreamAnalysisViewModel: ObservableObject {
                     .map {
                         $0.trimmingCharacters(in: .whitespacesAndNewlines)
                           .replacingOccurrences(of: "[*\"“”]", with: "", options: .regularExpression)
+                          .replacingOccurrences(of: "_", with: " ")
                     }
                     .filter { !$0.isEmpty }
                 tags = parsedTags
