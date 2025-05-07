@@ -15,6 +15,12 @@ struct ViewPlayListView: View {
     @State private var tracks: [tracksObject] = [] //holds tracks we found provided by our method called
     @State private var isLoading = true
     @State private var errorMessage: String?
+    //this is required, because up to this point dream is not availble which is why app storage is a basic string for now
+    var songsInsertedKey: String {
+        "songsInserted-\(dream.id.uuidString)"
+    }
+    //because task will be ran every time navigate to viewplaylist, insertion will reoocur every time, boolean value will never truly persist
+    @AppStorage("songsInserted-default") private var songsWereInserted: Bool = false
     var body: some View {
         VStack {
 //            Text("Playlist ID: \(dream.playlistID!)")
@@ -24,13 +30,12 @@ struct ViewPlayListView: View {
                 ProgressView("Loading Tracks...")
             } else if let errorMessage = errorMessage {
                 Text(errorMessage).foregroundColor(.red)
-            } else {
-                List(tracks, id: \.uri) { track in
-                    VStack(alignment: .leading) {
-                        Text(track.name)
-                        Text(track.uri).font(.caption).foregroundColor(.gray)
-                    }
-                }
+            }
+            else {
+                //will call seperate view to display thw playlist items
+                //the user will never see the results of the search but rather finalized playlist
+                PlaylistSongsView(dream: dream)
+                    .environmentObject(DreamPlaylistController())
             }
         }
         .navigationTitle("Your Dream Playlist")
@@ -41,15 +46,24 @@ struct ViewPlayListView: View {
             }
 
             do {
-                let result = try await viewModel.f(for: dream, accessToken: accessToken)
-                tracks = result.tracks.items
+                let result = try await viewModel.searchForSongs(for: dream, accessToken: accessToken)
+                tracks = result.tracks.items ///will be used to pass to to insertsongsintoplaylist
+                // check that the insertion has happened already
+                let key = songsInsertedKey
+                //rather than simple boolean working with appstorage allows boolean value to trul persist; whereas a simple state boolean would never reamin "true" becasue the task would rerun and make api call every time view reloads
+                if !UserDefaults.standard.bool(forKey: key) {
+                    //access uris and map them into an array
+                    let uris = result.tracks.items.map{$0.uri}
+                    try await viewModel.insertSongsIntoPlaylist(accessToken: accessToken, for: dream, trackURIs: uris)
+                    UserDefaults.standard.set(true, forKey: key)
+                }
+
                 isLoading = false
             } catch {
                 errorMessage = "Failed to fetch tracks: \(error)"
                 isLoading = false
             }
         }
-
     }
 }
 
@@ -62,12 +76,11 @@ struct ViewPlayListView: View {
         tags: ["Ambient", "Calm", "Wonder"],
         playlistID: "mock_playlist_123"
     )
-    
-    // Set up a model container in memory for the preview
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: Dream.self, configurations: config)
-    
+    //ensure envrinment variables are present
     return ViewPlayListView(dream: mockDream, userID: "mock_user_id_456")
         .modelContainer(container)
+        .environmentObject(DreamPlaylistController())
 }
 

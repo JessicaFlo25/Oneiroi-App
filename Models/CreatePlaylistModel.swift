@@ -69,7 +69,7 @@ struct searchedItemsObject:Codable{
 }
 
 struct tracksObject:Codable{
-//    let id:String
+    let id:String
     let name:String
     let uri:String
 }
@@ -85,4 +85,8 @@ enum spotifyErrorDetails:Error{
 struct createPlaylistRequestBody:Codable{
     let name:String
     let description:String  //will be empty string at instantiation, other boolean values have defualts, no need to define here
+}
+
+struct addTracksToPlaylistRequestBody:Codable{
+    let uris:[String]   //array of all the track uris which are from the returned object from searchforsongs method
 }

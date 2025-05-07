@@ -37,4 +37,5 @@ struct ContentView: View {
     
     return ContentView()
         .modelContainer(container)
+        .environmentObject(DreamPlaylistController())
 }
