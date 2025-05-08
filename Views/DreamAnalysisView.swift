@@ -25,7 +25,7 @@ struct DreamAnalysisView: View {
     
     var body: some View {
             VStack(spacing: 20) {
-                Text("Your dream can be categorized to the following three tags:")
+                Text("Your dream can be categorized into the following three tags:")
                     .font(.custom("AnticDidone-Regular", size: 25))
                     .font(.headline)
                 
