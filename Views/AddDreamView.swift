@@ -94,20 +94,26 @@ struct AddDreamView: View {
                     }
                     .padding(.bottom, 30)
                     
-                    //display error messages
-                    //both are invalid
-                    if !titleErrorMessage.isEmpty && !dreamDescriptionErrorMessage.isEmpty{
-                        Text(titleErrorMessage + "\n" + dreamDescriptionErrorMessage)
-                    }
-                    //title invalid so display saved error
-                    else if !titleErrorMessage.isEmpty {
-                        Text(titleErrorMessage)
-                    }
-                    //description is invalid display saved error message
-                    else if !dreamDescriptionErrorMessage.isEmpty {
-                        Text(dreamDescriptionErrorMessage)
-                    }
-                    
+                    //display error messages, to reserve same amount of space for errors
+                    let errorText: String = {
+                        //both are invalid
+                        if !titleErrorMessage.isEmpty && !dreamDescriptionErrorMessage.isEmpty {
+                            return "\(titleErrorMessage)\n\(dreamDescriptionErrorMessage)"
+                        } else if !titleErrorMessage.isEmpty {//title invalid so display saved error
+                            return titleErrorMessage
+                        } else if !dreamDescriptionErrorMessage.isEmpty {//description is invalid display saved error message
+                            return dreamDescriptionErrorMessage
+                        } else {//all were provided
+                            return ""
+                        }
+                    }()
+
+                    Text(errorText)
+                        .foregroundColor(.red)
+                        .multilineTextAlignment(.center)
+                        .frame(height: errorText.isEmpty ? 0 : 50)
+                        .animation(.easeInOut, value: errorText)
+
                     Button(action: {
                         //both valid
                         if addDreamViewModel.validateTitle() && addDreamViewModel.validateDescription() {
@@ -189,6 +195,12 @@ struct AddDreamView: View {
 //                }
             }
         }
+        .ignoresSafeArea(.keyboard, edges:.bottom)
+        .gesture(
+            TapGesture().onEnded { _ in
+                UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+            }
+        )//inclued this since, assumed adding a button anywhere to dsimiss the keyboard would be invasive
     }
 }
 //in simulator keyboard may block submit button but there is a simple fix
