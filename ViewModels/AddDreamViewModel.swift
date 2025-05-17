@@ -30,7 +30,6 @@ class AddDreamViewModel: ObservableObject {
             return false
         }
         //valid
-//        titleIsValid = true
         titleErrorMessage = ""
         return true
     }
@@ -41,7 +40,6 @@ class AddDreamViewModel: ObservableObject {
             dreamDescriptionErrorMessage = "Description is required"
             return false
         }
-//        dreamDescriptionIsValid = true
         dreamDescriptionErrorMessage = ""
         return true
     }

@@ -24,30 +24,30 @@ struct DreamAnalysisView: View {
     @Environment(\.modelContext) private var modelContext
     
     var body: some View {
-            VStack(spacing: 20) {
-                Text("Your dream can be categorized into the following three tags:")
-                    .font(.custom("AnticDidone-Regular", size: 25))
-                    .font(.headline)
-                
-                if geminiResponseManager.isLoading {
-                    ProgressView()
-                        .progressViewStyle(CircularProgressViewStyle(tint: .indigo))
-                        .scaleEffect(2)
-                } else {
-                    //call resuable view, no need for result from viewmodel
-                    DreamTagView(dreamTags: $dream.tags)
-                }
+        VStack(spacing: 20) {
+            Text("Your dream can be categorized into the following three tags:")
+                .font(.custom("AnticDidone-Regular", size: 24))
+                .font(.headline)
+            
+            if geminiResponseManager.isLoading {
+                ProgressView()
+                    .progressViewStyle(CircularProgressViewStyle(tint: .indigo))
+                    .scaleEffect(2)
+            } else {
+                //call resuable view, no need for result from viewmodel
+                DreamTagView(dreamTags: $dream.tags)
             }
-            .padding()
-            .task {
-                await geminiResponseManager.getResponse(for: dream, context: modelContext)
-            }
-            VStack {
-                Image("rabbitandcarrot")
-                    .resizable()
-                    .frame(width: 400, height:500)
-                    .padding(.bottom, 20)
-            }
+        }
+        .padding()
+        .task {
+            await geminiResponseManager.getResponse(for: dream, context: modelContext)
+        }
+        VStack {
+            Image("rabbitandcarrot")
+                .resizable()
+                .frame(width: 400, height:500)
+                .padding(.bottom, 20)
+        }
     }
 }
 
@@ -59,5 +59,5 @@ struct DreamAnalysisView: View {
     
     return DreamAnalysisView(dream: dream)
         .modelContainer(container)
-        .environment(\.modelContext, context)  // Inject the context
+        .environment(\.modelContext, context)
 }

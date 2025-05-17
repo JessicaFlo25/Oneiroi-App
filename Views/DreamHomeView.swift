@@ -53,7 +53,6 @@ struct DreamHomeView: View {
                     Divider()
                         .background(Color.gray)
                         .frame(width: geometry.size.width)
-                    //after this line can add 'folders' for the dreams
                     
                     //dreams are contained
                     ScrollView {
@@ -79,11 +78,20 @@ struct DreamHomeView: View {
                                     .background(Color.gray.opacity(0.05))
                                     .cornerRadius(8)
                                 }
+                                .contextMenu {
+                                    //because model context is defined, can just delete the current dream, by holding down
+                                    Button(role: .destructive){
+                                        withAnimation {
+                                            modelContext.delete(dream)
+                                        }
+                                    } label:{
+                                        Label("Delete", systemImage: "trash.fill")
+                                    }
+                                }
                             }
                         }
                         .padding()
                     }
-                    //end
                     Spacer()
                 }
                 .frame(width: geometry.size.width, alignment: .top)

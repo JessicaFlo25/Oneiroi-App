@@ -22,7 +22,6 @@ struct CreatePlaylistView: View {
             Task {
                 //blocks edge case of repetitve generation of same playlist
                 guard dream.playlistID == nil else{
-                    print("playlist was already created. Check Spotify and look for a playlist with the name the same as this dream.")
                     return
                 }
                 viewModel.isLoading = true
@@ -30,7 +29,6 @@ struct CreatePlaylistView: View {
                 do {
                     let playlist = try await viewModel.createPlaylist(for: dream, accessToken: playlistController.accessToken!)
                     dream.playlistID = playlist.id //once this value is assigned, it means that the playlist was created will be 'true'
-                    // Optionally save dream here
                     playlistid = playlist.id
                     navigateToTracks = true
                     print("success at creating the playlist")
@@ -51,7 +49,7 @@ struct CreatePlaylistView: View {
             else if !dream.playlistWasCreated {
                 VStack {
                     Label("Create Playlist", systemImage: "plus.circle")
-                    Text(displayedUserID) // Display the ID here
+                    Text(displayedUserID)
                         .font(.caption)
                 }
             }

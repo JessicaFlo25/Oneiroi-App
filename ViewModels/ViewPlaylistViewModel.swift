@@ -17,7 +17,6 @@ class ViewPlaylistViewModel:ObservableObject {
         let genreTag = dream.tags[0]
         let limit = 5
         let offset = 0
-//        let type = ["track"]    //define type of item we are seacrhing for
         
         let endpoint = "https://api.spotify.com/v1/search"
         //convert to url object, will be mutated later when attaching querie
@@ -84,7 +83,5 @@ class ViewPlaylistViewModel:ObservableObject {
         guard let httpResponse = response as? HTTPURLResponse,httpResponse.statusCode == 201 else {
             throw spotifyErrorDetails.invalidresponse
         }
-        print("📡 Playlist creation response status code: \(httpResponse.statusCode)")
-        
     }
 }

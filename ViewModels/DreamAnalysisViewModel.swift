@@ -37,13 +37,6 @@ class DreamAnalysisViewModel: ObservableObject {
         isLoading = true
         //remove the loading screen until after the response is recieved
         defer { isLoading = false }
-        // Print initial dream details
-        print("🔵 Starting analysis for dream:")
-        print("Title: \(dream.title)")
-        print("Description: \(dream.dreamDescription)")
-        print("Current tags (before analysis): \(dream.tags)")
-        
-        
         do {
             let response = try await model.generateContent("""
             Analyze this dream: \(dream.dreamDescription)
@@ -68,13 +61,7 @@ class DreamAnalysisViewModel: ObservableObject {
                 tags = parsedTags
                 result = text
                 dream.tags = parsedTags
-                //print before saving
-                print("🔴 Dream tags before save:", dream.tags)
                 try context.save()
-                
-                //print after saving
-                print("🟠 Dream tags after save:", dream.tags)
-                print("🟤 Context saved successfully")
                 
             }
         } catch {

@@ -23,9 +23,8 @@ struct ViewPlayListView: View {
     @AppStorage("songsInserted-default") private var songsWereInserted: Bool = false
     var body: some View {
         VStack {
-//            Text("Playlist ID: \(dream.playlistID!)")
-//                .font(.title)//at this point should have this
-
+            //            Text("Playlist ID: \(dream.playlistID!)")
+            //                .font(.title)//at this point should have this
             if isLoading {
                 ProgressView("Loading Tracks...")
             } else if let errorMessage = errorMessage {
@@ -42,7 +41,7 @@ struct ViewPlayListView: View {
                 errorMessage = "No access token available"
                 return
             }
-
+            
             do {
                 let result = try await viewModel.searchForSongs(for: dream, accessToken: accessToken)
                 tracks = result.tracks.items ///will be used to pass to to insertsongsintoplaylist
@@ -55,7 +54,7 @@ struct ViewPlayListView: View {
                     try await viewModel.insertSongsIntoPlaylist(accessToken: accessToken, for: dream, trackURIs: uris)
                     UserDefaults.standard.set(true, forKey: key)
                 }
-
+                
                 isLoading = false
             } catch {
                 errorMessage = "Failed to fetch tracks: \(error)"
@@ -66,7 +65,6 @@ struct ViewPlayListView: View {
 }
 
 #Preview {
-    // Create a mock dream with a sample playlist ID
     let mockDream = Dream(
         description: "In my dream, I was on a beach made of stars.",
         title: "Galactic Shores",

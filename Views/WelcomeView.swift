@@ -13,17 +13,19 @@ struct WelcomeView: View {
     @State private var isPressed = false
     
     var body: some View {
+        GeometryReader{ geometry in
             ZStack {
                 Color.white
                 //first "layer" is the angel (bottom)
-                    Image("angel") // Center Image
-                        .resizable()
-                        .frame(width: 400, height:500)
-                        .padding(.bottom, 20)
+                Image("angel") // Center Image
+                    .resizable()
+                    .frame(width: 400, height:500)
+                    .padding(.bottom, 20)
                 //layer on top
                 VStack(spacing: 5) {
                     Text("ONEIROI") // Title above the image
-                        .font(.custom("AnticDidone-Regular", size: 34))
+                        .font(.custom("AnticDidone-Regular",
+                                      size: geometry.size.width > 600 ? 34 : 34))
                         .fontWeight(.bold)
                         .padding(.bottom, 90)
                         .foregroundColor(.black)
@@ -34,8 +36,10 @@ struct WelcomeView: View {
                             playlistController.authorizeandOpenApp()
                         }) {
                             Text("Get Started")
+                                .font(.custom("AnticDidone-Regular",
+                                              size: geometry.size.width > 600 ? 34 : 24))
                                 .padding()
-                                .background(Color.blue)
+                                .background(Color(UIColor(red: 0.467, green: 0.490, blue: 0.655, alpha: 1.0)))
                                 .foregroundColor(.white)
                                 .cornerRadius(10)
                         }
@@ -43,6 +47,7 @@ struct WelcomeView: View {
                 }
             }
         }
+    }
 }
 
 #Preview {

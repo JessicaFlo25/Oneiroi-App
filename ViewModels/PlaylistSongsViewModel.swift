@@ -8,19 +8,19 @@
 import Foundation
 
 class PlaylistSongsViewModel:ObservableObject {
-
+    
     //MARK: -This method simply fetches the songs from the playlist using playlist id of the dream
     func retrievePlaylistSongs(for dream: Dream, accessToken:String) async throws-> getPlaylistResponse{
         let limit = 5
         let offset = 0
-       //while at this point should have the playlist ID cant force unwrapping to nil
+        //while at this point should have the playlist ID cant force unwrapping to nil
         guard let playlistID = dream.playlistID else {
             throw spotifyErrorDetails.invalidURL
         }
         
         let endpoint = "https://api.spotify.com/v1/playlists/\(playlistID)/tracks"
         var urlComponents = URLComponents(string: endpoint)!
-
+        
         //build up the query whch involves the genre and track limit,etc.,
         urlComponents.queryItems = [
             //based off docs match the key and provide values for the scope of project

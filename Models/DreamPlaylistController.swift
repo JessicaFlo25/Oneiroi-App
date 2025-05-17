@@ -34,13 +34,13 @@ class DreamPlaylistController: NSObject, ObservableObject, SPTAppRemoteDelegate 
     let spotifyRedirectURL = URL(string:"spotify-ios-quick-start://spotify-login-callback")!
     //main entry point for interacting with spotify
     lazy var appRemote: SPTAppRemote = {
-          let appRemote = SPTAppRemote(configuration: SPTConfiguration(
+        let appRemote = SPTAppRemote(configuration: SPTConfiguration(
             clientID: spotifyClientID,
             redirectURL: spotifyRedirectURL
-          ), logLevel: .debug)
-          appRemote.delegate = self
-          return appRemote
-      }()
+        ), logLevel: .debug)
+        appRemote.delegate = self
+        return appRemote
+    }()
     
     //while can open Spotify app to obtain access token within viewmodel, I prefered to include it within this class
     func authorizeandOpenApp() {
@@ -55,7 +55,6 @@ class DreamPlaylistController: NSObject, ObservableObject, SPTAppRemoteDelegate 
         appRemote.authorizeAndPlayURI("", asRadio: false, additionalScopes: scopes)
     }
     
-    //
     func updateAccessToken(_ url: URL) {
         let parameters = appRemote.authorizationParameters(from: url)
         

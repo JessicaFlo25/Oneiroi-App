@@ -13,14 +13,14 @@ struct DreamTagView: View {
 
     var body: some View {
         Group {
-            //foreach rather than indxing to avoud repitioon
+            //foreach rather than indexing to avoid repition
             if dreamTags.count == 3 {
                 HStack(spacing: 10) {
                     ForEach(0..<3, id: \.self) { index in
                         Text(dreamTags[index])
                             .font(.custom("AnticDidone-Regular", size: 15))
                             .font(.subheadline)
-                            .lineLimit(1)
+                            .lineLimit(2)
                             .padding(.horizontal, 12)
                             .padding(.vertical, 6)
                             .background(colors[index].opacity(0.2))

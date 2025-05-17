@@ -76,7 +76,6 @@ class CreatePlaylistViewModel:ObservableObject {
             throw spotifyErrorDetails.invalidresponse
         }
         
-        print("📡 Playlist creation response status code: \(httpResponse.statusCode)")
         return try JSONDecoder().decode(createPlaylistResponse.self, from: data)
     }
 }

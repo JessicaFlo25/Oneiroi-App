@@ -13,10 +13,9 @@ struct DreamDetailView: View {
     var body: some View {
         GeometryReader { geometry in
             VStack(alignment: .leading, spacing: 20) {
-                //header section (title, tags, date)
                 Text(dream.title)
                     .font(.custom("AnticDidone-Regular",
-                                size: geometry.size.width > 600 ? 40 : 35))
+                                  size: geometry.size.width > 600 ? 40 : 21))
                     .fontWeight(.bold)
                 
                 if dream.tags.count == 3 {
@@ -33,7 +32,7 @@ struct DreamDetailView: View {
                 ScrollView {
                     Text(dream.dreamDescription)
                         .font(.custom("AnticDidone-Regular",
-                                    size: geometry.size.width > 600 ? 40 : 25))
+                                      size: geometry.size.width > 600 ? 40 : 21))
                         .font(.body)
                         .padding()
                         .frame(maxWidth: .infinity, alignment: .leading)
@@ -45,9 +44,7 @@ struct DreamDetailView: View {
                 Spacer()
                 //this section contains a buttonview which will call spotify if the user wants
                 //on click will call respective methods to make playlist,search songs,and add songs
-                CreatePlaylistView(dream:dream)
-                
-            
+                CreatePlaylistView(dream:dream) 
                 
             }
             .padding()
