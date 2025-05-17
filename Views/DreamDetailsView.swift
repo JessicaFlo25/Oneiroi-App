@@ -15,7 +15,7 @@ struct DreamDetailView: View {
             VStack(alignment: .leading, spacing: 20) {
                 Text(dream.title)
                     .font(.custom("AnticDidone-Regular",
-                                  size: geometry.size.width > 600 ? 40 : 21))
+                                  size: geometry.size.width > 600 ? 40 : 24))
                     .fontWeight(.bold)
                 
                 if dream.tags.count == 3 {

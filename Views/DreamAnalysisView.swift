@@ -38,16 +38,15 @@ struct DreamAnalysisView: View {
                 DreamTagView(dreamTags: $dream.tags)
             }
         }
+        .frame(height: 200)
         .padding()
         .task {
             await geminiResponseManager.getResponse(for: dream, context: modelContext)
         }
-        VStack {
-            Image("rabbitandcarrot")
-                .resizable()
-                .frame(width: 400, height:500)
-                .padding(.bottom, 20)
-        }
+        Image("rabbitandcarrot")
+            .resizable()
+            .frame(width: 400, height:500)
+            .padding(.bottom, 20)
     }
 }
 

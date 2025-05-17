@@ -29,10 +29,12 @@ struct PlaylistSongsView: View {
                     
                     VStack(alignment: .leading) {
                         Text(track.name)
+                            .font(.custom("AnticDidone-Regular", size: 18))
                             .font(.headline)
                             .foregroundColor(.black)
                         
                         Text(track.artists.first?.name ?? "Unknown Artist")
+                            .font(.custom("AnticDidone-Regular", size: 18))
                             .font(.subheadline)
                             .foregroundColor(.secondary)
                     }
