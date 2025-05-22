@@ -130,12 +130,9 @@ struct AddDreamView: View {
                             //xplicitly save the context
                             do {
                                 try modelContext.save()
-//                                print("Dream saved successfully!")
                             } catch {
                                 print("Failed to save dream: \(error)")
                             }
-                            
-                        
                             //print out all dreams inserted
 //                            addDreamViewModel.printSavedDreams(modelContext: modelContext)
                             
@@ -145,7 +142,6 @@ struct AddDreamView: View {
                             addDreamViewModel.dreamDescription = ""
                             titleErrorMessage = ""
                             dreamDescriptionErrorMessage = ""
-                            //call gemini, using model logic
                         }
                         else {
                             //both invalid

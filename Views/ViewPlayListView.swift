@@ -74,7 +74,6 @@ struct ViewPlayListView: View {
     )
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: Dream.self, configurations: config)
-    //ensure envrinment variables are present
     return ViewPlayListView(dream: mockDream, userID: "mock_user_id_456")
         .modelContainer(container)
         .environmentObject(DreamPlaylistController())

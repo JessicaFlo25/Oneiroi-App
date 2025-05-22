@@ -54,7 +54,7 @@ struct DreamAnalysisView: View {
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: Dream.self, configurations: config)
     let dream = Dream(description: "Test dream", title: "Test")
-    let context = ModelContext(container)  // Create the context
+    let context = ModelContext(container)
     
     return DreamAnalysisView(dream: dream)
         .modelContainer(container)

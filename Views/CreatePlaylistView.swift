@@ -33,7 +33,7 @@ struct CreatePlaylistView: View {
                     navigateToTracks = true
                     print("success at creating the playlist")
                 } catch {
-                    print("❌ Failed to create playlist:", error)
+                    print("Failed to create playlist:", error)
                 }
             }
         }) {

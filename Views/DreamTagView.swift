@@ -13,7 +13,6 @@ struct DreamTagView: View {
 
     var body: some View {
         Group {
-            //foreach rather than indexing to avoid repition
             if dreamTags.count == 3 {
                 HStack(spacing: 10) {
                     ForEach(0..<3, id: \.self) { index in
@@ -34,7 +33,6 @@ struct DreamTagView: View {
 }
 
 #Preview {
-    // Preview wrapper since we need binding
     struct PreviewWrapper: View {
         @State var tags = ["Synthwave", "Anxiety", "Longing"]
         
